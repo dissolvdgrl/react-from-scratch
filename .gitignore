@@ -2,3 +2,8 @@ node_modules
 dist
 .DS_Store
 .env
+/.idea/php.xml
+/.idea/react-from-scratch.iml
+/.idea/vcs.xml
+/.idea/modules.xml
+/.idea/laravel-idea.xml
