@@ -1,25 +1,24 @@
 import {Heart, LoaderCircle} from "lucide-react";
 import {Puppy} from "../types";
-import {useState} from "react";
+import {Dispatch, SetStateAction, useState} from "react";
+import {toggleLikedStatus} from "../queries";
 
-export function LikeToggle({puppy}: {
-    puppy: Puppy
+export function LikeToggle({puppy, setPuppies}: {
+    puppy: Puppy;
+    setPuppies: Dispatch<SetStateAction<Puppy[]>>;
 }) {
     const [pending, setPending] = useState(false);
 
     return (
         <button
             className="group flex items-center gap-1"
-            onClick={() => {
+            onClick={async () => {
                 setPending(true);
-                /*setTimeout(() => {
-                    if (liked.includes(id)) {
-                        setLiked(liked.filter(pupId => pupId !== id));
-                    } else {
-                        setLiked([...liked, id]);
-                    }
-                    setPending(false);
-                }, 1500)*/
+                const updatedPuppy = await toggleLikedStatus(puppy.id);
+                setPuppies((prevPups) => {
+                    return prevPups.map(existingPuppy => existingPuppy.id === updatedPuppy.id ? updatedPuppy : existingPuppy);
+                });
+                setPending(false);
             }
             }>
             {pending ? (

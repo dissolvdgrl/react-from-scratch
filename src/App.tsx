@@ -7,7 +7,6 @@ import {PuppiesList} from "./components/PuppiesList";
 import {NewPuppyForm} from "./components/NewPuppyForm";
 import {Suspense, use, useState} from "react";
 import {Puppy} from "./types";
-import {LikedContext} from "./context/liked-context";
 import {LoaderCircle} from "lucide-react";
 import {ErrorBoundary} from "react-error-boundary";
 import {getPuppies} from "./queries";
@@ -39,19 +38,16 @@ const puppyPromise = getPuppies();
 
 function Main() {
     const apiPuppies = use(puppyPromise);
-    const [liked, setLiked] = useState<Puppy['id'][]>([1, 3]);
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [puppies, setPuppies] = useState<Puppy[]>(apiPuppies);
 
     return (
         <main>
-            <LikedContext value={{liked, setLiked}}>
-                <div className="mt-24 grid gap-8 sm:grid-cols-2">
-                    <Search searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
-                    <ShortList puppies={puppies}/>
-                </div>
-                <PuppiesList searchQuery={searchQuery} puppies={puppies}/>
-            </LikedContext>
+            <div className="mt-24 grid gap-8 sm:grid-cols-2">
+                <Search searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
+                <ShortList puppies={puppies} setPuppies={setPuppies}/>
+            </div>
+            <PuppiesList searchQuery={searchQuery} puppies={puppies} setPuppies={setPuppies}/>
             <NewPuppyForm puppies={puppies} setPuppies={setPuppies}/>
         </main>
     );
